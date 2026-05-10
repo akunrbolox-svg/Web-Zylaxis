@@ -1,0 +1,1216 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+<title>Nazam — Developer Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#080809;
+  --bg2:#0f0f11;
+  --bg3:#141416;
+  --border:#222226;
+  --border2:#2a2a30;
+  --text:#e8e8ec;
+  --muted:#6b6b75;
+  --accent:#f0f0f0;
+  --dim:#3a3a42;
+  --white:#ffffff;
+  --red:#ff3b3b;
+}
+html{scroll-behavior:smooth}
+body{
+  background:var(--bg);
+  color:var(--text);
+  font-family:'JetBrains Mono',monospace;
+  font-size:14px;
+  line-height:1.6;
+  min-height:100vh;
+  overflow-x:hidden;
+}
+
+
+/* GRAIN OVERLAY */
+body::before{
+  content:'';position:fixed;inset:0;
+  background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+  pointer-events:none;z-index:0;opacity:.4;
+}
+
+/* LAYOUT */
+.app{display:flex;min-height:100vh;position:relative;z-index:1}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;min-width:220px;
+  background:var(--bg2);
+  border-right:1px solid var(--border);
+  display:flex;flex-direction:column;
+  position:fixed;top:0;left:0;height:100vh;
+  z-index:100;overflow-y:auto;
+}
+.sidebar-logo{
+  padding:28px 20px 20px;
+  border-bottom:1px solid var(--border);
+}
+.sidebar-logo .name{
+  font-family:'Syne',sans-serif;
+  font-weight:800;font-size:18px;
+  color:var(--white);letter-spacing:-.5px;
+}
+.sidebar-logo .role{
+  font-size:10px;color:var(--muted);
+  margin-top:2px;letter-spacing:1px;text-transform:uppercase;
+}
+.nav{padding:16px 0;flex:1}
+.nav-item{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 20px;
+  color:var(--muted);font-size:12px;
+  letter-spacing:.5px;text-transform:uppercase;
+  cursor:pointer;transition:all .2s;
+  border-left:2px solid transparent;
+  user-select:none;
+}
+.nav-item:hover,.nav-item.active{color:var(--white);border-left-color:var(--white);background:rgba(255,255,255,.03)}
+.nav-item svg{width:14px;height:14px;flex-shrink:0}
+.sidebar-footer{
+  padding:16px 20px;border-top:1px solid var(--border);
+  font-size:10px;color:var(--dim);
+}
+
+/* MAIN */
+.main{margin-left:220px;flex:1;min-height:100vh}
+
+/* PANELS */
+.panel{display:none;padding:40px;min-height:100vh;animation:fadeIn .2s ease}
+.panel.active{display:block}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+.panel-header{margin-bottom:36px}
+.panel-title{
+  font-family:'Syne',sans-serif;
+  font-size:28px;font-weight:800;
+  color:var(--white);letter-spacing:-1px;
+}
+.panel-sub{font-size:11px;color:var(--muted);margin-top:4px;letter-spacing:.5px}
+
+/* CARDS */
+.card{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:4px;padding:24px;margin-bottom:16px;
+}
+.card-label{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+
+/* INPUTS */
+input[type=text],input[type=file],textarea,select{
+  width:100%;background:var(--bg3);
+  border:1px solid var(--border2);
+  color:var(--text);font-family:'JetBrains Mono',monospace;
+  font-size:13px;padding:10px 14px;border-radius:3px;
+  outline:none;transition:border .2s;
+}
+input[type=text]:focus,textarea:focus{border-color:var(--dim)}
+input[type=file]{padding:8px;cursor:pointer}
+textarea{resize:vertical;min-height:80px}
+label{font-size:11px;color:var(--muted);display:block;margin-bottom:6px;letter-spacing:.3px}
+
+/* BUTTONS */
+.btn{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 20px;border-radius:3px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;
+  font-weight:500;letter-spacing:.5px;cursor:pointer;
+  border:none;transition:all .2s;user-select:none;
+}
+.btn-primary{background:var(--white);color:var(--bg);font-weight:700}
+.btn-primary:hover{background:#d0d0d0}
+.btn-ghost{background:transparent;color:var(--text);border:1px solid var(--border2)}
+.btn-ghost:hover{border-color:var(--dim);background:rgba(255,255,255,.03)}
+.btn-danger{background:#ff3b3b22;color:var(--red);border:1px solid #ff3b3b44}
+.btn-danger:hover{background:#ff3b3b33}
+.btn:disabled{opacity:.4;cursor:not-allowed}
+.btn-sm{padding:6px 14px;font-size:11px}
+
+/* STATUS */
+.status{
+  font-size:11px;padding:8px 12px;border-radius:3px;
+  margin-top:10px;display:none;
+}
+.status.show{display:block}
+.status.ok{background:#1a2e1a;color:#4caf50;border:1px solid #4caf5033}
+.status.err{background:#2e1a1a;color:#ff5252;border:1px solid #ff525233}
+.status.info{background:#1a1a2e;color:#7c9eff;border:1px solid #7c9eff33}
+
+/* DIVIDER */
+.divider{height:1px;background:var(--border);margin:20px 0}
+
+/* GRID */
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:700px){.grid2{grid-template-columns:1fr}}
+
+/* ============ HOME PANEL ============ */
+#home-panel .hero{
+  padding:60px 0 40px;
+  border-bottom:1px solid var(--border);margin-bottom:40px;
+}
+.hero-tag{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;margin-bottom:16px}
+.hero-name{
+  font-family:'Syne',sans-serif;font-size:52px;font-weight:800;
+  color:var(--white);line-height:1;letter-spacing:-2px;margin-bottom:8px;
+}
+.hero-desc{font-size:13px;color:var(--muted);max-width:480px;line-height:1.8}
+.hero-links{display:flex;gap:12px;margin-top:24px;flex-wrap:wrap}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:var(--border);border:1px solid var(--border)}
+.stat-item{background:var(--bg2);padding:20px;text-align:center}
+.stat-num{font-family:'Syne',sans-serif;font-size:28px;font-weight:800;color:var(--white)}
+.stat-lbl{font-size:10px;color:var(--muted);letter-spacing:1px;text-transform:uppercase;margin-top:4px}
+
+/* ============ DEPLOYER ============ */
+.preview-box{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:3px;padding:16px;max-height:200px;overflow:auto;
+  font-size:11px;color:var(--muted);white-space:pre-wrap;word-break:break-all;
+  margin-top:12px;display:none;
+}
+.deploy-result{
+  background:var(--bg3);border:1px solid var(--border);
+  padding:16px;border-radius:3px;margin-top:12px;display:none;
+}
+.deploy-result a{color:var(--white);font-weight:700}
+
+/* ============ PHOTO ENHANCER ============ */
+.canvas-wrap{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px;
+}
+canvas{width:100%;max-height:260px;object-fit:contain;background:#0a0a0a;border:1px solid var(--border);border-radius:3px;display:block}
+.slider-row{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.slider-row label{width:100px;font-size:11px;color:var(--muted);margin:0;flex-shrink:0}
+input[type=range]{flex:1;accent-color:#fff;height:2px;cursor:pointer}
+.slider-val{width:36px;text-align:right;font-size:11px;color:var(--muted)}
+
+/* ============ AI CODING ============ */
+.chat-wrap{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:4px;height:420px;display:flex;flex-direction:column;
+}
+.chat-msgs{flex:1;overflow-y:auto;padding:16px;display:flex;flex-direction:column;gap:12px}
+.chat-msgs::-webkit-scrollbar{width:4px}
+.chat-msgs::-webkit-scrollbar-track{background:transparent}
+.chat-msgs::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px}
+.msg{padding:12px 16px;border-radius:3px;font-size:13px;line-height:1.7;max-width:90%}
+.msg.user{background:var(--bg3);border:1px solid var(--border2);align-self:flex-end;color:var(--text)}
+.msg.ai{background:#0d0d14;border:1px solid var(--border);align-self:flex-start;color:var(--text)}
+.msg.ai pre{background:var(--bg);border:1px solid var(--border2);padding:12px;border-radius:3px;overflow-x:auto;margin-top:8px;font-size:12px}
+.msg.ai code{font-family:'JetBrains Mono',monospace}
+.msg-label{font-size:9px;letter-spacing:1px;text-transform:uppercase;margin-bottom:4px}
+.msg.user .msg-label{color:var(--muted)}
+.msg.ai .msg-label{color:#7c9eff}
+.chat-input-row{
+  display:flex;gap:8px;padding:12px;
+  border-top:1px solid var(--border);align-items:flex-end;
+}
+.chat-input-row textarea{min-height:42px;max-height:120px;border-radius:3px;resize:none;flex:1}
+.typing-indicator{display:none;padding:8px 16px}
+.typing-indicator.show{display:flex;gap:4px;align-items:center}
+.dot{width:5px;height:5px;background:var(--dim);border-radius:50%;animation:blink 1.2s infinite}
+.dot:nth-child(2){animation-delay:.2s}
+.dot:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,80%,100%{opacity:.2}40%{opacity:1}}
+.file-attach-row{display:flex;align-items:center;gap:8px;padding:0 12px 8px}
+.file-attach-row label{color:var(--muted);font-size:11px;cursor:pointer}
+.file-attach-row label:hover{color:var(--white)}
+#attach-file{display:none}
+.attached-name{font-size:11px;color:var(--muted);font-style:italic}
+
+/* ============ FILE UPLOADER ============ */
+.upload-result{
+  background:var(--bg3);border:1px solid var(--border);
+  padding:16px;border-radius:3px;margin-top:12px;
+  font-size:12px;display:none;
+}
+.upload-result .url-box{
+  display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap;
+}
+.url-box input{flex:1;min-width:0}
+.audio-opts{margin-top:12px;display:none}
+.audio-opts label{display:flex;align-items:center;gap:6px;cursor:pointer;margin-bottom:6px;font-size:12px;color:var(--muted)}
+.audio-opts input[type=checkbox]{accent-color:#fff;width:14px;height:14px}
+
+/* ============ MUSIC PLAYER ============ */
+.player-wrap{display:flex;gap:16px;flex-direction:column}
+.search-row{display:flex;gap:8px;margin-bottom:4px}
+.search-row input{flex:1}
+.playlist{
+  background:var(--bg2);border:1px solid var(--border);
+  border-radius:4px;overflow:hidden;max-height:300px;overflow-y:auto;
+}
+.playlist::-webkit-scrollbar{width:4px}
+.playlist::-webkit-scrollbar-thumb{background:var(--dim)}
+.track-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;cursor:pointer;transition:background .15s;
+  border-bottom:1px solid var(--border);
+}
+.track-item:last-child{border-bottom:none}
+.track-item:hover,.track-item.playing{background:rgba(255,255,255,.04)}
+.track-item.playing .track-num{color:var(--white);font-weight:700}
+.track-num{width:20px;font-size:11px;color:var(--muted);text-align:center;flex-shrink:0}
+.track-info{flex:1;min-width:0}
+.track-name{font-size:13px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-artist{font-size:11px;color:var(--muted);margin-top:1px}
+.track-dur{font-size:11px;color:var(--muted);flex-shrink:0}
+.now-playing{
+  background:var(--bg3);border:1px solid var(--border);
+  border-radius:4px;padding:20px;
+}
+.np-meta{margin-bottom:16px}
+.np-title{font-family:'Syne',sans-serif;font-size:18px;font-weight:700;color:var(--white)}
+.np-artist{font-size:12px;color:var(--muted);margin-top:2px}
+.progress-wrap{margin-bottom:14px}
+.progress-bar{width:100%;height:2px;background:var(--dim);border-radius:1px;cursor:pointer;position:relative;margin-bottom:6px}
+.progress-fill{height:100%;background:var(--white);border-radius:1px;width:0%;pointer-events:none}
+.time-row{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+.controls{display:flex;align-items:center;justify-content:center;gap:20px}
+.ctrl-btn{background:none;border:none;color:var(--text);cursor:pointer;font-size:20px;padding:4px;transition:color .15s;line-height:1}
+.ctrl-btn:hover{color:var(--white)}
+.ctrl-btn.main-btn{
+  width:40px;height:40px;background:var(--white);color:var(--bg);
+  border-radius:50%;font-size:18px;display:flex;align-items:center;justify-content:center;
+}
+.ctrl-btn.main-btn:hover{background:#d0d0d0}
+#yt-frame{display:none}
+
+/* ============ DOWNLOADER ============ */
+.dl-result{
+  background:var(--bg3);border:1px solid var(--border);
+  padding:16px;border-radius:3px;margin-top:12px;font-size:12px;display:none;
+}
+
+/* AUDIO BG */
+#bg-audio{display:none}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:4px;height:4px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--dim);border-radius:2px}
+
+/* RESPONSIVE FORCE DESKTOP */
+@media(max-width:900px){
+  body{zoom:0.72}
+}
+</style>
+</head>
+<body>
+
+<audio id="bg-audio" src="https://files.catbox.moe/mfsuh5.mp3" loop></audio>
+
+<div class="app">
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <div class="name">NAZAM</div>
+      <div class="role">Developer / Zam Coder</div>
+    </div>
+    <nav class="nav">
+      <div class="nav-item active" onclick="showPanel('home')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+        Home
+      </div>
+      <div class="nav-item" onclick="showPanel('deployer')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
+        Deployer
+      </div>
+      <div class="nav-item" onclick="showPanel('enhancer')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        Photo Enhancer
+      </div>
+      <div class="nav-item" onclick="showPanel('ai')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+        Zylaxis AI
+      </div>
+      <div class="nav-item" onclick="showPanel('uploader')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+        File Uploader
+      </div>
+      <div class="nav-item" onclick="showPanel('music')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
+        Music Player
+      </div>
+      <div class="nav-item" onclick="showPanel('downloader')">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Downloader
+      </div>
+    </nav>
+    <div class="sidebar-footer">
+      &copy; 2025 Nazam — Zam Coder
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <!-- HOME -->
+    <div id="home-panel" class="panel active">
+      <div class="hero">
+        <div class="hero-tag">— Developer Portfolio</div>
+        <div class="hero-name">NAZAM</div>
+        <div class="hero-desc">
+          Independent developer building web apps, Android tooling, and game scripts under the identity Zam Coder. Zero budget, maximum output.
+        </div>
+        <div class="hero-links">
+          <button class="btn btn-primary" onclick="showPanel('ai')">Open Zylaxis AI</button>
+          <button class="btn btn-ghost" onclick="showPanel('deployer')">Deploy Project</button>
+        </div>
+      </div>
+      <div class="stat-grid">
+        <div class="stat-item"><div class="stat-num">7</div><div class="stat-lbl">Tools</div></div>
+        <div class="stat-item"><div class="stat-num">100%</div><div class="stat-lbl">Free</div></div>
+        <div class="stat-item"><div class="stat-num">∞</div><div class="stat-lbl">Output</div></div>
+      </div>
+      <div style="margin-top:32px">
+        <div class="card">
+          <div class="card-label">Stack</div>
+          <div style="color:var(--muted);font-size:12px;line-height:2">
+            HTML / CSS / JS &nbsp;—&nbsp; Firebase / Firestore &nbsp;—&nbsp; OAuth2 &nbsp;—&nbsp;
+            Android Shell / Brevent &nbsp;—&nbsp; Roblox Lua &nbsp;—&nbsp; Anthropic API &nbsp;—&nbsp; Vercel
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DEPLOYER -->
+    <div id="deployer-panel" class="panel">
+      <div class="panel-header">
+        <div class="panel-title">HTML Deployer</div>
+        <div class="panel-sub">Upload file HTML, deploy langsung ke Vercel</div>
+      </div>
+
+      <input type="hidden" id="vercel-token">
+      <div class="card">
+        <div class="card-label">Project</div>
+        <label>Nama Project</label>
+        <input type="text" id="project-name" placeholder="my-project" oninput="sanitizeProjectName(this)">
+        <div style="font-size:10px;color:var(--muted);margin-top:4px">Huruf kecil, tanpa spasi — otomatis disanitasi</div>
+        <div class="divider"></div>
+        <label>File HTML</label>
+        <input type="file" id="html-file" accept=".html,.htm" onchange="previewHTML(this)">
+        <div class="preview-box" id="html-preview"></div>
+      </div>
+
+      <button class="btn btn-primary" onclick="deployToVercel()" id="deploy-btn">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="16 16 12 12 8 16"/><line x1="12" y1="12" x2="12" y2="21"/><path d="M20.39 18.39A5 5 0 0018 9h-1.26A8 8 0 103 16.3"/></svg>
+        Deploy to Vercel
+      </button>
+
+      <div class="deploy-result" id="deploy-result">
+        <div class="card-label">Deploy Berhasil</div>
+        <div id="deploy-link" style="margin-top:6px;font-size:13px"></div>
+      </div>
+      <div class="status" id="deploy-status"></div>
+    </div>
+
+    <!-- PHOTO ENHANCER -->
+    <div id="enhancer-panel" class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Photo Enhancer</div>
+        <div class="panel-sub">Pertajam foto — sharpen, contrast, brightness, clarity</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Upload Foto</div>
+        <input type="file" id="photo-input" accept="image/*" onchange="loadPhoto(this)">
+      </div>
+
+      <div class="card">
+        <div class="card-label">Adjustment</div>
+        <div class="slider-row">
+          <label>Sharpen</label>
+          <input type="range" id="sl-sharpen" min="0" max="10" value="0" step="0.1" oninput="applyFilters();this.nextElementSibling.textContent=this.value">
+          <span class="slider-val">0</span>
+        </div>
+        <div class="slider-row">
+          <label>Brightness</label>
+          <input type="range" id="sl-brightness" min="-100" max="100" value="0" oninput="applyFilters();this.nextElementSibling.textContent=this.value">
+          <span class="slider-val">0</span>
+        </div>
+        <div class="slider-row">
+          <label>Contrast</label>
+          <input type="range" id="sl-contrast" min="-100" max="100" value="0" oninput="applyFilters();this.nextElementSibling.textContent=this.value">
+          <span class="slider-val">0</span>
+        </div>
+        <div class="slider-row">
+          <label>Saturation</label>
+          <input type="range" id="sl-sat" min="-100" max="100" value="0" oninput="applyFilters();this.nextElementSibling.textContent=this.value">
+          <span class="slider-val">0</span>
+        </div>
+        <div class="slider-row">
+          <label>Clarity</label>
+          <input type="range" id="sl-clarity" min="0" max="10" value="0" step="0.1" oninput="applyFilters();this.nextElementSibling.textContent=this.value">
+          <span class="slider-val">0</span>
+        </div>
+        <div style="display:flex;gap:8px;margin-top:16px;flex-wrap:wrap">
+          <button class="btn btn-primary btn-sm" onclick="downloadEnhanced()">Download</button>
+          <button class="btn btn-ghost btn-sm" onclick="resetFilters()">Reset</button>
+        </div>
+      </div>
+
+      <div class="canvas-wrap">
+        <div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:6px;letter-spacing:.5px">ORIGINAL</div>
+          <canvas id="canvas-orig"></canvas>
+        </div>
+        <div>
+          <div style="font-size:10px;color:var(--muted);margin-bottom:6px;letter-spacing:.5px">ENHANCED</div>
+          <canvas id="canvas-out"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- AI CODING -->
+    <div id="ai-panel" class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Zylaxis</div>
+        <div class="panel-sub">AI Coding Assistant — hanya fokus programming</div>
+      </div>
+
+      <div class="chat-wrap">
+        <div class="chat-msgs" id="chat-msgs">
+          <div class="msg ai">
+            <div class="msg-label">Zylaxis</div>
+            Siap. Kirim kode atau pertanyaan programming — saya handle semua bahasa. Bisa attach file .txt jika perlu.
+          </div>
+        </div>
+        <div class="typing-indicator" id="typing">
+          <span style="font-size:10px;color:var(--muted);margin-right:4px">Zylaxis</span>
+          <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        </div>
+        <div class="file-attach-row">
+          <label for="attach-file">
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21.44 11.05l-9.19 9.19a6 6 0 01-8.49-8.49l9.19-9.19a4 4 0 015.66 5.66l-9.2 9.19a2 2 0 01-2.83-2.83l8.49-8.48"/></svg>
+            Attach .txt
+          </label>
+          <input type="file" id="attach-file" accept=".txt" onchange="handleAttach(this)">
+          <span class="attached-name" id="attached-name"></span>
+          <button class="btn btn-ghost btn-sm" id="clear-attach" onclick="clearAttach()" style="display:none">x</button>
+        </div>
+        <div class="chat-input-row">
+          <textarea id="chat-input" placeholder="Tulis pertanyaan coding..." rows="1" onkeydown="chatKey(event)"></textarea>
+          <button class="btn btn-primary btn-sm" onclick="sendChat()" id="send-btn">Send</button>
+        </div>
+      </div>
+      <div style="font-size:10px;color:var(--dim);margin-top:10px">Enter = kirim &nbsp;|&nbsp; Shift+Enter = baris baru</div>
+    </div>
+
+    <!-- FILE UPLOADER -->
+    <div id="uploader-panel" class="panel">
+      <div class="panel-header">
+        <div class="panel-title">File Uploader</div>
+        <div class="panel-sub">Upload foto / audio / video — generate link permanen via tmpfiles.org</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Pilih File</div>
+        <input type="file" id="upload-file" accept="image/*,audio/*,video/*" onchange="onFileSelect(this)">
+        <div style="font-size:11px;color:var(--muted);margin-top:6px">Max ukuran: 200MB (batas tmpfiles.org)</div>
+      </div>
+
+      <div class="audio-opts" id="audio-opts">
+        <div class="card-label">Opsi Audio</div>
+        <label><input type="checkbox" id="opt-autoplay"> Auto-play saat link dibuka</label>
+        <label><input type="checkbox" id="opt-loop"> Loop</label>
+        <div style="font-size:10px;color:var(--muted);margin-top:6px">
+          Akan generate snippet HTML siap pakai.
+        </div>
+      </div>
+
+      <div style="margin-top:16px">
+        <button class="btn btn-primary" onclick="uploadFile()" id="upload-btn">Upload & Generate Link</button>
+      </div>
+      <div class="status" id="upload-status"></div>
+      <div class="upload-result" id="upload-result"></div>
+    </div>
+
+    <!-- MUSIC PLAYER -->
+    <div id="music-panel" class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Music Player</div>
+        <div class="panel-sub">Stream musik via YouTube — tanpa iklan, gratis</div>
+      </div>
+
+      <div class="player-wrap">
+        <div class="now-playing" id="now-playing">
+          <div class="np-meta">
+            <div class="np-title" id="np-title">Pilih lagu dari playlist</div>
+            <div class="np-artist" id="np-artist">—</div>
+          </div>
+          <div class="progress-wrap">
+            <div class="progress-bar" id="progress-bar" onclick="seekMusic(event)">
+              <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="time-row">
+              <span id="time-cur">0:00</span>
+              <span id="time-tot">0:00</span>
+            </div>
+          </div>
+          <div class="controls">
+            <button class="ctrl-btn" onclick="prevTrack()" title="Prev">&#9664;&#9664;</button>
+            <button class="ctrl-btn main-btn" id="play-btn" onclick="togglePlay()">&#9654;</button>
+            <button class="ctrl-btn" onclick="nextTrack()" title="Next">&#9654;&#9654;</button>
+          </div>
+          <div id="yt-frame"></div>
+        </div>
+
+        <div>
+          <div class="search-row">
+            <input type="text" id="music-search" placeholder="Cari lagu atau artis..." oninput="filterPlaylist()">
+          </div>
+          <div class="playlist" id="playlist"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- DOWNLOADER -->
+    <div id="downloader-panel" class="panel">
+      <div class="panel-header">
+        <div class="panel-title">Video &amp; Audio Downloader</div>
+        <div class="panel-sub">YouTube, TikTok, Instagram — powered by Cobalt</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">URL</div>
+        <label>Link video / audio</label>
+        <input type="text" id="dl-url" placeholder="https://youtube.com/watch?v=...">
+        <div class="divider"></div>
+        <div class="grid2">
+          <div>
+            <label>Mode</label>
+            <select id="dl-mode">
+              <option value="auto">Auto (terbaik)</option>
+              <option value="audio">Audio saja (MP3)</option>
+              <option value="mute">Video tanpa suara</option>
+            </select>
+          </div>
+          <div>
+            <label>Kualitas Video</label>
+            <select id="dl-quality">
+              <option value="1080">1080p</option>
+              <option value="720" selected>720p</option>
+              <option value="480">480p</option>
+              <option value="360">360p</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <button class="btn btn-primary" onclick="startDownload()" id="dl-btn">Get Download Link</button>
+      <div class="status" id="dl-status"></div>
+      <div class="dl-result" id="dl-result"></div>
+
+      <div class="card" style="margin-top:24px">
+        <div class="card-label">Info</div>
+        <div style="font-size:12px;color:var(--muted);line-height:2">
+          Downloader ini menggunakan Cobalt API (cobalt.tools) — open source, gratis.<br>
+          Support: YouTube, TikTok, Instagram, Twitter/X, dan 30+ platform lain.<br>
+          Jika link gagal, coba ubah kualitas atau mode.
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+
+
+// ===== BG AUDIO =====
+const bgAudio = document.getElementById('bg-audio');
+let bgPlayed = false;
+function tryPlay() {
+  if (bgPlayed) return;
+  bgAudio.play().then(() => { bgPlayed = true; }).catch(() => {});
+}
+document.addEventListener('click', tryPlay, { once: true });
+document.addEventListener('keydown', tryPlay, { once: true });
+window.addEventListener('load', () => setTimeout(tryPlay, 500));
+
+// ===== NAV =====
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  document.getElementById(id + '-panel').classList.add('active');
+  const items = document.querySelectorAll('.nav-item');
+  const map = ['home','deployer','enhancer','ai','uploader','music','downloader'];
+  const idx = map.indexOf(id);
+  if (idx >= 0) items[idx].classList.add('active');
+  // Stop bg audio on music panel, resume otherwise
+  if (id === 'music') {
+    bgAudio.pause();
+  } else {
+    if (bgPlayed) bgAudio.play().catch(() => {});
+  }
+}
+
+// ===== DEPLOYER =====
+function sanitizeProjectName(input) {
+  input.value = input.value.toLowerCase().replace(/[^a-z0-9-]/g, '-').replace(/-+/g, '-');
+}
+function previewHTML(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    const prev = document.getElementById('html-preview');
+    prev.textContent = e.target.result.substring(0, 2000) + (e.target.result.length > 2000 ? '\n...[truncated]' : '');
+    prev.style.display = 'block';
+  };
+  reader.readAsText(file);
+}
+async function deployToVercel() {
+  const token = document.getElementById('vercel-token').value.trim() || 'vca_BQuu9ChDu3n6Pfh6YQnCshpoYkWDSFKogLqmBtQ0tC8NAA5rXt340sjz';
+  const name = document.getElementById('project-name').value.trim();
+  const fileInput = document.getElementById('html-file');
+  const st = document.getElementById('deploy-status');
+  const res = document.getElementById('deploy-result');
+
+  if (!token) return showStatus(st, 'Masukkan Vercel API token dulu.', 'err');
+  if (!name) return showStatus(st, 'Masukkan nama project.', 'err');
+  if (!fileInput.files[0]) return showStatus(st, 'Pilih file HTML.', 'err');
+
+  const btn = document.getElementById('deploy-btn');
+  btn.disabled = true; btn.textContent = 'Deploying...';
+  showStatus(st, 'Menghubungi Vercel API...', 'info');
+  res.style.display = 'none';
+
+  try {
+    const content = await fileInput.files[0].text();
+    const body = {
+      name: name,
+      files: [{ file: 'index.html', data: content }],
+      projectSettings: { framework: null }
+    };
+    const r = await fetch('https://api.vercel.com/v13/deployments', {
+      method: 'POST',
+      headers: { 'Authorization': 'Bearer ' + token, 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await r.json();
+    if (data.url) {
+      const liveUrl = 'https://' + data.url;
+      res.style.display = 'block';
+      document.getElementById('deploy-link').innerHTML =
+        'Link: <a href="' + liveUrl + '" target="_blank">' + liveUrl + '</a>' +
+        '<div style="margin-top:8px"><button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText(\'' + liveUrl + '\')">Copy Link</button></div>';
+      showStatus(st, 'Deploy berhasil!', 'ok');
+    } else {
+      showStatus(st, 'Gagal: ' + (data.error?.message || JSON.stringify(data)), 'err');
+    }
+  } catch (e) {
+    showStatus(st, 'Error: ' + e.message, 'err');
+  }
+  btn.disabled = false; btn.textContent = 'Deploy to Vercel';
+}
+
+// ===== PHOTO ENHANCER =====
+let origImageData = null;
+const canvasOrig = document.getElementById('canvas-orig');
+const canvasOut = document.getElementById('canvas-out');
+const ctxOrig = canvasOrig.getContext('2d', { willReadFrequently: true });
+const ctxOut = canvasOut.getContext('2d', { willReadFrequently: true });
+
+function loadPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const img = new Image();
+  img.onload = () => {
+    const MAX = 800;
+    let w = img.width, h = img.height;
+    if (w > MAX) { h = Math.round(h * MAX / w); w = MAX; }
+    if (h > MAX) { w = Math.round(w * MAX / h); h = MAX; }
+    canvasOrig.width = canvasOut.width = w;
+    canvasOrig.height = canvasOut.height = h;
+    ctxOrig.drawImage(img, 0, 0, w, h);
+    origImageData = ctxOrig.getImageData(0, 0, w, h);
+    applyFilters();
+  };
+  img.src = URL.createObjectURL(file);
+}
+
+function applyFilters() {
+  if (!origImageData) return;
+  const sharpen = parseFloat(document.getElementById('sl-sharpen').value);
+  const brightness = parseInt(document.getElementById('sl-brightness').value);
+  const contrast = parseInt(document.getElementById('sl-contrast').value);
+  const sat = parseInt(document.getElementById('sl-sat').value);
+  const clarity = parseFloat(document.getElementById('sl-clarity').value);
+
+  let data = new Uint8ClampedArray(origImageData.data);
+  const w = origImageData.width, h = origImageData.height;
+
+  // Brightness + contrast
+  const factor = (259 * (contrast + 255)) / (255 * (259 - contrast));
+  for (let i = 0; i < data.length; i += 4) {
+    data[i]   = clamp(factor * (data[i]   + brightness - 128) + 128);
+    data[i+1] = clamp(factor * (data[i+1] + brightness - 128) + 128);
+    data[i+2] = clamp(factor * (data[i+2] + brightness - 128) + 128);
+  }
+
+  // Saturation
+  if (sat !== 0) {
+    const s = 1 + sat / 100;
+    for (let i = 0; i < data.length; i += 4) {
+      const gray = 0.299*data[i] + 0.587*data[i+1] + 0.114*data[i+2];
+      data[i]   = clamp(gray + s * (data[i]   - gray));
+      data[i+1] = clamp(gray + s * (data[i+1] - gray));
+      data[i+2] = clamp(gray + s * (data[i+2] - gray));
+    }
+  }
+
+  // Sharpen (unsharp mask)
+  if (sharpen > 0) {
+    data = unsharpMask(data, w, h, sharpen * 0.5, sharpen);
+  }
+
+  // Clarity (local contrast via high-freq boost)
+  if (clarity > 0) {
+    data = applyClarity(data, w, h, clarity);
+  }
+
+  const imgData = new ImageData(data, w, h);
+  ctxOut.putImageData(imgData, 0, 0);
+}
+
+function clamp(v) { return Math.max(0, Math.min(255, Math.round(v))); }
+
+function unsharpMask(data, w, h, radius, amount) {
+  const blurred = gaussianBlur(data, w, h, Math.max(1, Math.round(radius)));
+  const result = new Uint8ClampedArray(data.length);
+  for (let i = 0; i < data.length; i += 4) {
+    for (let c = 0; c < 3; c++) {
+      result[i+c] = clamp(data[i+c] + amount * (data[i+c] - blurred[i+c]));
+    }
+    result[i+3] = data[i+3];
+  }
+  return result;
+}
+
+function applyClarity(data, w, h, amount) {
+  const blurred = gaussianBlur(data, w, h, 4);
+  const result = new Uint8ClampedArray(data.length);
+  for (let i = 0; i < data.length; i += 4) {
+    for (let c = 0; c < 3; c++) {
+      const diff = data[i+c] - blurred[i+c];
+      result[i+c] = clamp(data[i+c] + (amount * 0.3) * diff);
+    }
+    result[i+3] = data[i+3];
+  }
+  return result;
+}
+
+function gaussianBlur(data, w, h, r) {
+  const tmp = new Uint8ClampedArray(data.length);
+  const out = new Uint8ClampedArray(data.length);
+  // Horizontal
+  for (let y = 0; y < h; y++) {
+    for (let x = 0; x < w; x++) {
+      let rr=0,g=0,b=0,cnt=0;
+      for (let dx = -r; dx <= r; dx++) {
+        const nx = Math.max(0, Math.min(w-1, x+dx));
+        const idx = (y*w+nx)*4;
+        rr+=data[idx]; g+=data[idx+1]; b+=data[idx+2]; cnt++;
+      }
+      const i=(y*w+x)*4;
+      tmp[i]=rr/cnt; tmp[i+1]=g/cnt; tmp[i+2]=b/cnt; tmp[i+3]=data[i+3];
+    }
+  }
+  // Vertical
+  for (let x = 0; x < w; x++) {
+    for (let y = 0; y < h; y++) {
+      let rr=0,g=0,b=0,cnt=0;
+      for (let dy = -r; dy <= r; dy++) {
+        const ny = Math.max(0, Math.min(h-1, y+dy));
+        const idx = (ny*w+x)*4;
+        rr+=tmp[idx]; g+=tmp[idx+1]; b+=tmp[idx+2]; cnt++;
+      }
+      const i=(y*w+x)*4;
+      out[i]=rr/cnt; out[i+1]=g/cnt; out[i+2]=b/cnt; out[i+3]=data[i+3];
+    }
+  }
+  return out;
+}
+
+function resetFilters() {
+  ['sl-sharpen','sl-brightness','sl-contrast','sl-sat','sl-clarity'].forEach(id => {
+    document.getElementById(id).value = 0;
+    document.getElementById(id).nextElementSibling.textContent = 0;
+  });
+  if (origImageData) applyFilters();
+}
+
+function downloadEnhanced() {
+  if (!origImageData) return;
+  const link = document.createElement('a');
+  link.download = 'enhanced.png';
+  link.href = canvasOut.toDataURL('image/png');
+  link.click();
+}
+
+// ===== AI CHAT (ZYLAXIS) =====
+const API_KEY = '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';
+const SYSTEM_PROMPT = `You are Zylaxis, an elite AI coding assistant created by Nazam (Zam Coder). 
+Your ONLY domain is programming and software development — all languages, frameworks, tools, architecture, debugging, optimization, and code review.
+Rules:
+- If the user asks something NOT related to coding/programming/software/tech tools, respond: "Saya hanya membantu topik coding dan programming. Silakan ajukan pertanyaan teknis."
+- NEVER use emojis unless user explicitly asks.
+- Always write clean, efficient, error-free, modern code.
+- Format code in proper markdown code blocks with language tags.
+- Be direct, fast, no filler words.
+- Read and reference any attached .txt file content if provided.
+- Developer of this tool: Nazam (Zam Coder).`;
+
+let chatHistory = [];
+let attachedContent = '';
+
+async function sendChat() {
+  const input = document.getElementById('chat-input');
+  const msg = input.value.trim();
+  if (!msg && !attachedContent) return;
+
+  const userMsg = msg + (attachedContent ? '\n\n[Attached file content]:\n' + attachedContent : '');
+  input.value = '';
+  autoResize(input);
+  attachedContent = '';
+  clearAttach();
+
+  addMsg('user', msg || '[Attached file sent]');
+  chatHistory.push({ role: 'user', content: userMsg });
+
+  const typing = document.getElementById('typing');
+  typing.classList.add('show');
+  document.getElementById('send-btn').disabled = true;
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': API_KEY,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 2048,
+        system: SYSTEM_PROMPT,
+        messages: chatHistory
+      })
+    });
+    const data = await res.json();
+    const reply = data.content?.[0]?.text || 'Error: no response';
+    chatHistory.push({ role: 'assistant', content: reply });
+    addMsg('ai', reply);
+  } catch (e) {
+    addMsg('ai', 'Error connecting to API: ' + e.message);
+  }
+
+  typing.classList.remove('show');
+  document.getElementById('send-btn').disabled = false;
+}
+
+function addMsg(role, text) {
+  const msgs = document.getElementById('chat-msgs');
+  const div = document.createElement('div');
+  div.className = 'msg ' + role;
+  const label = document.createElement('div');
+  label.className = 'msg-label';
+  label.textContent = role === 'user' ? 'You' : 'Zylaxis';
+  div.appendChild(label);
+
+  // Format code blocks
+  const formatted = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (_, lang, code) =>
+    `<pre><code class="lang-${lang}">${escHtml(code.trim())}</code></pre>`
+  ).replace(/`([^`]+)`/g, '<code>$1</code>').replace(/\n/g, '<br>');
+
+  const content = document.createElement('div');
+  content.innerHTML = formatted;
+  div.appendChild(content);
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function chatKey(e) {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendChat(); }
+}
+
+function autoResize(el) {
+  el.style.height = 'auto';
+  el.style.height = Math.min(el.scrollHeight, 120) + 'px';
+}
+document.getElementById('chat-input').addEventListener('input', function() { autoResize(this); });
+
+function handleAttach(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    attachedContent = e.target.result;
+    document.getElementById('attached-name').textContent = file.name;
+    document.getElementById('clear-attach').style.display = 'inline-flex';
+  };
+  reader.readAsText(file);
+}
+
+function clearAttach() {
+  attachedContent = '';
+  document.getElementById('attach-file').value = '';
+  document.getElementById('attached-name').textContent = '';
+  document.getElementById('clear-attach').style.display = 'none';
+}
+
+// ===== FILE UPLOADER =====
+function onFileSelect(input) {
+  const file = input.files[0];
+  if (!file) return;
+  const isAudio = file.type.startsWith('audio/');
+  document.getElementById('audio-opts').style.display = isAudio ? 'block' : 'none';
+}
+
+async function uploadFile() {
+  const input = document.getElementById('upload-file');
+  const file = input.files[0];
+  if (!file) return showStatus(document.getElementById('upload-status'), 'Pilih file dulu.', 'err');
+
+  const btn = document.getElementById('upload-btn');
+  btn.disabled = true; btn.textContent = 'Uploading...';
+  const st = document.getElementById('upload-status');
+  showStatus(st, 'Mengupload ke tmpfiles.org...', 'info');
+
+  try {
+    const form = new FormData();
+    form.append('file', file);
+    const res = await fetch('https://tmpfiles.org/api/v1/upload', { method: 'POST', body: form });
+    const data = await res.json();
+    if (data.status === 'success') {
+      const rawUrl = data.data.url;
+      // Convert tmpfiles URL to direct link
+      const directUrl = rawUrl.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
+      showResult(file, directUrl, rawUrl);
+      showStatus(st, 'Upload berhasil!', 'ok');
+    } else {
+      showStatus(st, 'Upload gagal: ' + JSON.stringify(data), 'err');
+    }
+  } catch (e) {
+    showStatus(st, 'Error: ' + e.message, 'err');
+  }
+  btn.disabled = false; btn.textContent = 'Upload & Generate Link';
+}
+
+function showResult(file, directUrl, pageUrl) {
+  const res = document.getElementById('upload-result');
+  const isAudio = file.type.startsWith('audio/');
+  const autoplay = document.getElementById('opt-autoplay').checked;
+  const loop = document.getElementById('opt-loop').checked;
+
+  let html = `<div class="card-label">Link Berhasil</div>
+    <div class="url-box">
+      <input type="text" value="${directUrl}" readonly id="res-url">
+      <button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText('${directUrl}')">Copy</button>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:var(--muted)">Page: <a href="${pageUrl}" target="_blank" style="color:var(--text)">${pageUrl}</a></div>`;
+
+  if (isAudio) {
+    const attrs = (autoplay ? ' autoplay' : '') + (loop ? ' loop' : '');
+    const snippet = `&lt;audio src="${directUrl}"${attrs} controls&gt;&lt;/audio&gt;`;
+    html += `<div style="margin-top:12px">
+      <div class="card-label">HTML Snippet</div>
+      <div style="background:var(--bg);padding:10px;border-radius:3px;font-size:11px;word-break:break-all;border:1px solid var(--border);margin-top:6px">${snippet}</div>
+      <button class="btn btn-ghost btn-sm" style="margin-top:6px" onclick="navigator.clipboard.writeText('<audio src=\\'${directUrl}\\'${attrs} controls></audio>')">Copy Snippet</button>
+    </div>`;
+  }
+
+  res.innerHTML = html;
+  res.style.display = 'block';
+}
+
+// ===== MUSIC PLAYER =====
+const tracks = [
+  { title: 'Baby', artist: 'Justin Bieber', yt: 'kffacxfA7G4' },
+  { title: 'Love Yourself', artist: 'Justin Bieber', yt: 'oyEuk8j8imI' },
+  { title: 'Stay', artist: 'Justin Bieber x The Kid LAROI', yt: 'kTJczUoc26U' },
+  { title: 'Blinding Lights', artist: 'The Weeknd', yt: '4NRXx6U8ABQ' },
+  { title: 'As It Was', artist: 'Harry Styles', yt: 'H5v3kku4y6Q' },
+  { title: 'Shape of You', artist: 'Ed Sheeran', yt: 'JGwWNGJdvx8' },
+  { title: 'Levitating', artist: 'Dua Lipa', yt: 'TUVcZfQe-Kw' },
+  { title: 'Sunflower', artist: 'Post Malone', yt: 'ApXoWvfEYVU' },
+  { title: 'Dynamite', artist: 'BTS', yt: 'gdZLi9oWNZg' },
+  { title: 'Peaches', artist: 'Justin Bieber', yt: 'tQ0yjYUFza0' },
+  { title: 'Golden Hour', artist: 'JVKE', yt: 'PEM0Vs8jf1w' },
+  { title: 'Flowers', artist: 'Miley Cyrus', yt: 'G7KNmW9a75Y' },
+  { title: 'Anti-Hero', artist: 'Taylor Swift', yt: 'b1kbLwvqugk' },
+  { title: 'Butter', artist: 'BTS', yt: 'WMweEpGlu_U' },
+  { title: 'Bad Guy', artist: 'Billie Eilish', yt: 'DyDfgMOUjCI' },
+];
+
+let filteredTracks = [...tracks];
+let currentTrack = -1;
+let ytPlayer = null;
+let isPlaying = false;
+let progressTimer = null;
+
+function renderPlaylist() {
+  const pl = document.getElementById('playlist');
+  const q = document.getElementById('music-search').value.toLowerCase();
+  filteredTracks = tracks.filter(t =>
+    t.title.toLowerCase().includes(q) || t.artist.toLowerCase().includes(q)
+  );
+  pl.innerHTML = filteredTracks.map((t, i) => `
+    <div class="track-item ${currentTrack === tracks.indexOf(t) ? 'playing' : ''}" onclick="playTrack(${tracks.indexOf(t)})">
+      <div class="track-num">${currentTrack === tracks.indexOf(t) ? '&#9654;' : (i+1)}</div>
+      <div class="track-info">
+        <div class="track-name">${t.title}</div>
+        <div class="track-artist">${t.artist}</div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function filterPlaylist() { renderPlaylist(); }
+
+function playTrack(idx) {
+  currentTrack = idx;
+  const t = tracks[idx];
+  document.getElementById('np-title').textContent = t.title;
+  document.getElementById('np-artist').textContent = t.artist;
+
+  // Embed YT iframe
+  const frame = document.getElementById('yt-frame');
+  frame.innerHTML = `<iframe id="yt-iframe" width="1" height="1"
+    src="https://www.youtube-nocookie.com/embed/${t.yt}?autoplay=1&enablejsapi=1&origin=${location.origin}"
+    frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+  isPlaying = true;
+  document.getElementById('play-btn').innerHTML = '&#9646;&#9646;';
+  renderPlaylist();
+  startFakeProgress();
+}
+
+function togglePlay() {
+  if (currentTrack === -1) { playTrack(0); return; }
+  const iframe = document.querySelector('#yt-frame iframe');
+  if (!iframe) return;
+  if (isPlaying) {
+    iframe.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*');
+    isPlaying = false;
+    document.getElementById('play-btn').innerHTML = '&#9654;';
+    clearInterval(progressTimer);
+  } else {
+    iframe.contentWindow.postMessage('{"event":"command","func":"playVideo","args":""}', '*');
+    isPlaying = true;
+    document.getElementById('play-btn').innerHTML = '&#9646;&#9646;';
+    startFakeProgress();
+  }
+}
+
+function nextTrack() {
+  playTrack((currentTrack + 1) % tracks.length);
+}
+
+function prevTrack() {
+  playTrack((currentTrack - 1 + tracks.length) % tracks.length);
+}
+
+let fakeTime = 0, fakeDur = 210;
+function startFakeProgress() {
+  clearInterval(progressTimer);
+  fakeTime = 0; fakeDur = 180 + Math.floor(Math.random() * 60);
+  document.getElementById('time-tot').textContent = fmtTime(fakeDur);
+  progressTimer = setInterval(() => {
+    if (!isPlaying) return;
+    fakeTime++;
+    if (fakeTime >= fakeDur) { nextTrack(); return; }
+    const pct = (fakeTime / fakeDur) * 100;
+    document.getElementById('progress-fill').style.width = pct + '%';
+    document.getElementById('time-cur').textContent = fmtTime(fakeTime);
+  }, 1000);
+}
+
+function seekMusic(e) {
+  const bar = document.getElementById('progress-bar');
+  const pct = e.offsetX / bar.offsetWidth;
+  fakeTime = Math.floor(pct * fakeDur);
+  document.getElementById('progress-fill').style.width = (pct*100) + '%';
+  document.getElementById('time-cur').textContent = fmtTime(fakeTime);
+}
+
+function fmtTime(s) {
+  return Math.floor(s/60) + ':' + String(s%60).padStart(2,'0');
+}
+
+renderPlaylist();
+
+// ===== DOWNLOADER =====
+async function startDownload() {
+  const url = document.getElementById('dl-url').value.trim();
+  const mode = document.getElementById('dl-mode').value;
+  const quality = document.getElementById('dl-quality').value;
+  const st = document.getElementById('dl-status');
+  const res = document.getElementById('dl-result');
+
+  if (!url) return showStatus(st, 'Masukkan URL video.', 'err');
+
+  const btn = document.getElementById('dl-btn');
+  btn.disabled = true; btn.textContent = 'Processing...';
+  showStatus(st, 'Menghubungi Cobalt API...', 'info');
+  res.style.display = 'none';
+
+  try {
+    const body = { url, vQuality: quality, isAudioOnly: mode === 'audio', isNoTTWatermark: true, isTTFullAudio: true };
+    if (mode === 'mute') body.isAudioMuted = true;
+
+    const r = await fetch('https://api.cobalt.tools/', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+    const data = await r.json();
+
+    if (data.status === 'redirect' || data.status === 'stream' || data.url) {
+      const dlUrl = data.url || data.u;
+      res.innerHTML = `
+        <div class="card-label">Link Download Siap</div>
+        <div style="margin-top:8px;word-break:break-all">
+          <a href="${dlUrl}" target="_blank" style="color:var(--white)">${dlUrl.substring(0,80)}...</a>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <a href="${dlUrl}" download class="btn btn-primary btn-sm">Download</a>
+          <button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText('${dlUrl}')">Copy Link</button>
+        </div>`;
+      res.style.display = 'block';
+      showStatus(st, 'Link berhasil didapatkan.', 'ok');
+    } else if (data.status === 'picker') {
+      const links = data.picker.map((p,i) => `<div style="margin-bottom:6px"><a href="${p.url}" download class="btn btn-ghost btn-sm">Download Part ${i+1}</a></div>`).join('');
+      res.innerHTML = `<div class="card-label">Pilih bagian untuk download</div><div style="margin-top:10px">${links}</div>`;
+      res.style.display = 'block';
+      showStatus(st, 'Selesai.', 'ok');
+    } else {
+      showStatus(st, 'Gagal: ' + (data.text || data.error?.code || JSON.stringify(data)), 'err');
+    }
+  } catch (e) {
+    showStatus(st, 'Error: ' + e.message + '. Coba buka api.cobalt.tools untuk cek status.', 'err');
+  }
+  btn.disabled = false; btn.textContent = 'Get Download Link';
+}
+
+// ===== UTILS =====
+function showStatus(el, msg, type) {
+  el.textContent = msg;
+  el.className = 'status show ' + type;
+}
+</script>
+</body>
+</html>
